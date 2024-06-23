@@ -67,15 +67,17 @@ INSERT INTO ContasAPagar(
 							 2,
 							 3);							 
 							 
-
 SELECT CP.Numero,
 	   F.Nome,
 	   CP.DataVencimento,
 	   CP.DataPagamento,
 	   CP.Valor,
+	   CAP.DataProrrogacao,
 	   CASE 
-	       WHEN CAP.DataVencimento = CP.DataPagamento THEN 'CONTA PAGA'
-		   ELSE 'CONTA A PAGAR'
+	       WHEN (CAP.DataProrrogacao <> '') AND (CP.DataPagamento <> '') THEN 'CONTA PAGA'
+		   WHEN (CAP.DataProrrogacao <> '') AND (CP.DataPagamento =  '') THEN 'CONTA A PAGAR'		  
+		   WHEN (CAP.DataProrrogacao =  '') AND (CP.DataPagamento <> '') THEN 'CONTA PAGA'
+		   WHEN (CAP.DataProrrogacao =  '') AND (CP.DataPagamento =  '') THEN 'CONTA A PAGAR'
 	   END AS IDENTIFICADOR
   FROM Fornecedor F
  INNER JOIN ContasPagas CP ON CP.FornecedorCodigo = F.Codigo
